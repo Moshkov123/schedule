@@ -1,40 +1,58 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\items;
+use App\Models\group;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
-    public function home(){
-        $index= new Contact();
-        return view('index', ['index'=>$index->all()]);
-    }
+  public function home()
+  {
+      $index = new items();
+      return view('index', ['index' => $index->all()]);
+  }
 
-    public function about(){
+    public function about()
+    {
         return view('hello');
     }
 
-    public function review(){
-      $reviews= new Contact();
-        return view('review', ['reviews'=>$reviews->all()]);
-    }
+    public function review()
+{
+  $contacts = Contact::with('group', 'item')->get();
 
-    public function review_check(Request $request){
-      $valid = $request ->validate([
-        'group'=> 'required|min:2|max:120',
-        'subject'=> 'required|min:2|max:120',
-      
-      ]);
+  return view('review', compact('contacts'));
+}
 
-      $review = new Contact();
-      $review->subject = $request ->input('subject');
-      $review->group = $request ->input('group');
-     
+public function review_check(Request $request)
+{
+    $subjectValidation = $request->validate([
+        'subject' => 'required|min:2|max:120',
+    ]);
 
-      $review->save();
+    $groupValidation = $request->validate([
+        'group' => 'required|min:2|max:120',
+    ]);
 
-      return redirect()->route('review');
-    }
+    $item = new items();
+    $item->subject = $request->input('subject');
+    $item->save();
+
+    $group = new group();
+    $group->group = $request->input('group');
+    $group->save();
+
+    $contact = new Contact();
+    $contact->item_id = $item->id;
+    $contact->group_id = $group->id;
+    $contact->save();
+
+    
+
+    return redirect()->route('review');
+}
+
 }

@@ -23,10 +23,11 @@
 </form>
 
 <h1>Все отзывы</h1>
- @foreach($reviews as $el)
+@foreach($contacts as $el)
     <div class="alert alert-warning">
-    <h3>{{ $el->subject }}</h3>
-    <b>{{ $el->group }}</b>
+        
+    <h3>{{ $el->item_id }}</h3>
+    <b>{{ $el->group_id }}</b>
     </div>
  @endforeach
 @endsection
