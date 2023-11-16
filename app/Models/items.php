@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class items extends Model
 {
-    public function items()
+    public function groups()
     {
-        return $this->hasMany(Contact::class);
+        return $this->belongsToMany(Group::class);
     }
 }

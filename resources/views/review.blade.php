@@ -23,7 +23,7 @@
 </form>
 
 <h1>Все отзывы</h1>
-@foreach($contacts as $el)
+@foreach($item as $el)
     <div class="alert alert-warning">
         
     <h3>{{ $el->item_id }}</h3>
