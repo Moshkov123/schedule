@@ -6,6 +6,7 @@ use App\Models\Group;
 use App\Models\items;
 use App\Models\Group_Items;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GroupController extends Controller
 {
@@ -51,7 +52,8 @@ class GroupController extends Controller
     {
         $index = items::all();
         $group = Group::find($group);
-        $groupItem = new Group_Items(); 
+        $groupItem = DB::table('item_group')->get();
+        // $groupItem = new Group_Items(); 
         return view('groups.view', compact('index','group'),['groupItem' => $groupItem ->all()]);
     }
     
@@ -85,10 +87,18 @@ class GroupController extends Controller
     public function delete($id)
     {
         $group = Group::find($id);
-       if($group){
-        $group->delete();
+        $groupId = $group->id;
+       
+       $itemGroup = DB::table('item_group')->where('group_id', $groupId)->first();
+
+       if ($itemGroup) {
+           DB::table('item_group')->where('group_id', $groupId)->delete();
        }
+       if($group){
         
+        $group->delete();
+        
+       }
         return redirect()->route('create');
     }
 }
